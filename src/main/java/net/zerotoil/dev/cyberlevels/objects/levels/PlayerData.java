@@ -1,6 +1,7 @@
 package net.zerotoil.dev.cyberlevels.objects.levels;
 
 import net.zerotoil.dev.cyberlevels.CyberLevels;
+import net.zerotoil.dev.cyberlevels.api.events.XPChangeEvent;
 import net.zerotoil.dev.cyberlevels.objects.RewardObject;
 import net.zerotoil.dev.cyberlevels.objects.leaderboard.LeaderboardPlayer;
 import net.zerotoil.dev.iridiumapi.IridiumAPI;
@@ -82,6 +83,10 @@ public class PlayerData {
         // does player have a multiplier permission?
         if (doMultiplier && main.playerUtils().hasParentPerm(player, "CyberLevels.player.multiplier.", false))
             amount *= main.playerUtils().getMultiplier(player);
+
+        final XPChangeEvent xpChangeEvent = new XPChangeEvent(player, exp, exp + amount, amount);
+        Bukkit.getPluginManager().callEvent(xpChangeEvent);
+        amount = xpChangeEvent.getAmount();
 
         final double totalAmount = amount;
 
